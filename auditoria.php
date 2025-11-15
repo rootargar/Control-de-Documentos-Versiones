@@ -129,7 +129,7 @@ while ($accion = sqlsrv_fetch_array($stmtAcciones, SQLSRV_FETCH_ASSOC)) {
             align-items: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid #027be3;
         }
         
         .header h1 {
@@ -148,7 +148,7 @@ while ($accion = sqlsrv_fetch_array($stmtAcciones, SQLSRV_FETCH_ASSOC)) {
         }
         
         .nav-links a {
-            color: #667eea;
+            color: #027be3;
             text-decoration: none;
             margin-right: 15px;
         }
@@ -201,7 +201,7 @@ while ($accion = sqlsrv_fetch_array($stmtAcciones, SQLSRV_FETCH_ASSOC)) {
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #027be3;
         }
         
         .btn {
@@ -216,12 +216,12 @@ while ($accion = sqlsrv_fetch_array($stmtAcciones, SQLSRV_FETCH_ASSOC)) {
         }
         
         .btn-primary {
-            background: #667eea;
+            background: #027be3;
             color: white;
         }
-        
+
         .btn-primary:hover {
-            background: #5568d3;
+            background: #2196f3;
         }
         
         .btn-secondary {

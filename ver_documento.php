@@ -71,7 +71,7 @@ registrarAuditoria('Ver Documento', "Documento consultado: " . $documento['nombr
             align-items: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid #027be3;
         }
         
         .header h1 {
@@ -116,7 +116,7 @@ registrarAuditoria('Ver Documento', "Documento consultado: " . $documento['nombr
         }
         
         .nav-links a {
-            color: #667eea;
+            color: #027be3;
             text-decoration: none;
             margin-right: 15px;
             font-size: 14px;
@@ -137,11 +137,11 @@ registrarAuditoria('Ver Documento', "Documento consultado: " . $documento['nombr
             background: #f7fafc;
             padding: 20px;
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #027be3;
         }
-        
+
         .info-box h3 {
-            color: #667eea;
+            color: #027be3;
             font-size: 14px;
             margin-bottom: 15px;
             text-transform: uppercase;
@@ -226,12 +226,12 @@ registrarAuditoria('Ver Documento', "Documento consultado: " . $documento['nombr
         }
         
         .btn-primary {
-            background: #667eea;
+            background: #027be3;
             color: white;
         }
-        
+
         .btn-primary:hover {
-            background: #5568d3;
+            background: #2196f3;
         }
         
         .btn-success {

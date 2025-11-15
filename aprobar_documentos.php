@@ -155,7 +155,7 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
             align-items: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid #027be3;
         }
         
         .header h1 {
@@ -174,7 +174,7 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
         }
         
         .nav-links a {
-            color: #667eea;
+            color: #027be3;
             text-decoration: none;
             margin-right: 15px;
         }
@@ -214,13 +214,13 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
             padding: 20px;
             border-radius: 8px;
             text-align: center;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #027be3;
         }
-        
+
         .stat-card .number {
             font-size: 36px;
             font-weight: bold;
-            color: #667eea;
+            color: #027be3;
             margin-bottom: 5px;
         }
         
@@ -273,7 +273,7 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
         }
         
         .document-title .code {
-            color: #667eea;
+            color: #027be3;
             font-weight: 600;
             font-size: 14px;
         }

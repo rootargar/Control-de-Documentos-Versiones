@@ -41,7 +41,7 @@ $stmtDocumentos = sqlsrv_query($conn, $sqlDocumentos);
         }
         
         .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #027be3 0%, #2196f3 100%);
             color: white;
             padding: 15px 30px;
             display: flex;
@@ -98,7 +98,7 @@ $stmtDocumentos = sqlsrv_query($conn, $sqlDocumentos);
         }
         
         .card h3 {
-            color: #667eea;
+            color: #027be3;
             font-size: 18px;
             margin-bottom: 10px;
         }
@@ -127,7 +127,7 @@ $stmtDocumentos = sqlsrv_query($conn, $sqlDocumentos);
         .stat-card .number {
             font-size: 36px;
             font-weight: bold;
-            color: #667eea;
+            color: #027be3;
             margin-bottom: 5px;
         }
         
@@ -149,7 +149,7 @@ $stmtDocumentos = sqlsrv_query($conn, $sqlDocumentos);
             font-size: 20px;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid #027be3;
         }
         
         table {
@@ -202,12 +202,12 @@ $stmtDocumentos = sqlsrv_query($conn, $sqlDocumentos);
             text-decoration: none;
             display: inline-block;
             transition: all 0.3s;
-            background: #667eea;
+            background: #027be3;
             color: white;
         }
-        
+
         .btn:hover {
-            background: #5568d3;
+            background: #2196f3;
         }
         
         .logout-link {
@@ -216,7 +216,7 @@ $stmtDocumentos = sqlsrv_query($conn, $sqlDocumentos);
         }
         
         .logout-link a {
-            color: #667eea;
+            color: #027be3;
             text-decoration: none;
         }
         
