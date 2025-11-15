@@ -209,7 +209,7 @@ if (isset($_GET['editar'])) {
             align-items: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid #027be3;
         }
         
         .header h1 {
@@ -235,12 +235,12 @@ if (isset($_GET['editar'])) {
         }
         
         .btn-primary {
-            background: #667eea;
+            background: #027be3;
             color: white;
         }
-        
+
         .btn-primary:hover {
-            background: #5568d3;
+            background: #2196f3;
         }
         
         .btn-success {
@@ -348,7 +348,7 @@ if (isset($_GET['editar'])) {
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #027be3;
         }
         
         .form-actions {
@@ -418,7 +418,7 @@ if (isset($_GET['editar'])) {
         }
         
         .nav-links a {
-            color: #667eea;
+            color: #027be3;
             text-decoration: none;
             margin-right: 15px;
         }

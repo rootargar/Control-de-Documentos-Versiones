@@ -174,7 +174,7 @@ $stmtVersiones = sqlsrv_query($conn, $sqlVersiones, array($documento_id));
         .header {
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid #027be3;
         }
         
         .header h1 {
@@ -212,12 +212,12 @@ $stmtVersiones = sqlsrv_query($conn, $sqlVersiones, array($documento_id));
         }
         
         .btn-primary {
-            background: #667eea;
+            background: #027be3;
             color: white;
         }
-        
+
         .btn-primary:hover {
-            background: #5568d3;
+            background: #2196f3;
         }
         
         .btn-success {
