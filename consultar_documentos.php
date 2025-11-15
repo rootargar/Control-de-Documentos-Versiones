@@ -102,7 +102,7 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
         }
         
         .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #027be3 0%, #2196f3 100%);
             color: white;
             padding: 15px 30px;
             display: flex;
@@ -134,7 +134,7 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
         }
         
         .nav-links a {
-            color: #667eea;
+            color: #027be3;
             text-decoration: none;
             margin-right: 20px;
             font-size: 14px;
@@ -189,7 +189,7 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #027be3;
         }
         
         .search-actions {
@@ -209,12 +209,12 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
         }
         
         .btn-primary {
-            background: #667eea;
+            background: #027be3;
             color: white;
         }
-        
+
         .btn-primary:hover {
-            background: #5568d3;
+            background: #2196f3;
         }
         
         .btn-secondary {
@@ -253,7 +253,7 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid #027be3;
         }
         
         .results-header h2 {

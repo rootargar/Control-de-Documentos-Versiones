@@ -54,8 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Actualizar último acceso
                 $sqlUpdate = "UPDATE Usuarios SET fecha_ultimo_acceso = GETDATE() WHERE id = ?";
                 sqlsrv_query($conn, $sqlUpdate, array($user['id']));
-                
-                header('Location: index.php');
+
+                // Redirigir según el rol del usuario
+                if ($user['rol_id'] == 3) { // Consultor
+                    header('Location: consultar_documentos.php');
+                } else {
+                    header('Location: index.php');
+                }
                 exit();
             } else {
                 $error = 'Usuario o contraseña incorrectos';
