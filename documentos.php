@@ -434,6 +434,57 @@ if (isset($_GET['editar'])) {
         .full-width {
             grid-column: 1 / -1;
         }
+
+        /* Responsive para pantallas pequeñas (laptop/tablet) */
+        @media screen and (max-width: 1200px) {
+            .hide-on-small {
+                display: none !important;
+            }
+
+            .actions {
+                display: flex;
+                flex-direction: row;
+                gap: 5px;
+                flex-wrap: nowrap;
+                white-space: nowrap;
+            }
+
+            .btn-small {
+                padding: 5px 8px;
+                font-size: 11px;
+            }
+        }
+
+        @media screen and (max-width: 992px) {
+            .form-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            table th,
+            table td {
+                padding: 8px;
+                font-size: 13px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 15px;
+                overflow-x: auto;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .form-section {
+                padding: 15px;
+            }
+
+            table {
+                min-width: 700px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -575,10 +626,10 @@ if (isset($_GET['editar'])) {
                     <th>Código</th>
                     <th>Nombre</th>
                     <th>Categoría</th>
-                    <th>Responsable</th>
+                    <th class="hide-on-small">Responsable</th>
                     <th>Estado</th>
                     <th>Versiones</th>
-                    <th>Fecha Modificación</th>
+                    <th>Fecha Mod.</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -588,7 +639,7 @@ if (isset($_GET['editar'])) {
                         <td><?php echo htmlspecialchars($doc['codigo']); ?></td>
                         <td><?php echo htmlspecialchars($doc['nombre']); ?></td>
                         <td><?php echo htmlspecialchars($doc['categoria'] ?? '-'); ?></td>
-                        <td><?php echo htmlspecialchars($doc['responsable_nombre']); ?></td>
+                        <td class="hide-on-small"><?php echo htmlspecialchars($doc['responsable_nombre']); ?></td>
                         <td>
                             <span class="badge badge-<?php echo strtolower($doc['estado']); ?>">
                                 <?php echo htmlspecialchars($doc['estado']); ?>
@@ -607,7 +658,7 @@ if (isset($_GET['editar'])) {
                                 <a href="?editar=<?php echo $doc['id']; ?>" class="btn btn-primary btn-small">
                                     Editar
                                 </a>
-                                <form method="POST" action="" style="display: inline;" 
+                                <form method="POST" action="" style="display: inline;"
                                       onsubmit="return confirm('¿Está seguro de eliminar este documento?');">
                                     <input type="hidden" name="accion" value="eliminar">
                                     <input type="hidden" name="id" value="<?php echo $doc['id']; ?>">

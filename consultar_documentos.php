@@ -341,6 +341,69 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
             padding: 2px 4px;
             border-radius: 3px;
         }
+
+        /* Responsive para pantallas pequeñas (laptop/tablet) */
+        @media screen and (max-width: 1200px) {
+            .hide-on-small {
+                display: none !important;
+            }
+
+            .doc-description {
+                display: none !important;
+            }
+
+            .action-buttons {
+                display: flex;
+                flex-direction: row;
+                gap: 5px;
+                flex-wrap: nowrap;
+                white-space: nowrap;
+            }
+
+            .btn-small {
+                padding: 5px 8px;
+                font-size: 11px;
+            }
+        }
+
+        @media screen and (max-width: 992px) {
+            .search-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+
+            table th,
+            table td {
+                padding: 8px;
+                font-size: 13px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .navbar {
+                padding: 10px 15px;
+            }
+
+            .navbar h1 {
+                font-size: 18px;
+            }
+
+            .search-section {
+                padding: 15px;
+            }
+
+            .results-section {
+                padding: 15px;
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 600px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -456,7 +519,7 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
                             <th>Nombre</th>
                             <th>Categoría</th>
                             <th>Área</th>
-                            <th>Responsable</th>
+                            <th class="hide-on-small">Responsable</th>
                             <th>Estado</th>
                             <th>Versión</th>
                             <th>Fecha Mod.</th>
@@ -478,7 +541,7 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
                                 </td>
                                 <td><?php echo htmlspecialchars($doc['categoria'] ?? '-'); ?></td>
                                 <td><?php echo htmlspecialchars($doc['area'] ?? '-'); ?></td>
-                                <td><?php echo htmlspecialchars($doc['responsable_nombre']); ?></td>
+                                <td class="hide-on-small"><?php echo htmlspecialchars($doc['responsable_nombre']); ?></td>
                                 <td>
                                     <span class="badge badge-<?php echo strtolower($doc['estado']); ?>">
                                         <?php echo htmlspecialchars($doc['estado']); ?>
@@ -494,7 +557,7 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <?php 
+                                    <?php
                                     if ($doc['fecha_modificacion']) {
                                         echo date('d/m/Y', strtotime($doc['fecha_modificacion']));
                                     } else {
@@ -503,19 +566,19 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
                                     ?>
                                 </td>
                                 <td>
-                                    <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                                    <div class="action-buttons">
                                         <?php if ($doc['version_id']): ?>
-                                            <a href="visualizar_pdf.php?version_id=<?php echo $doc['version_id']; ?>" 
+                                            <a href="visualizar_pdf.php?version_id=<?php echo $doc['version_id']; ?>"
                                                class="btn btn-primary btn-small"
                                                target="_blank"
                                                title="Ver PDF de la versión actual">
-                                                👁️ Ver PDF
+                                                Ver Doc
                                             </a>
                                         <?php endif; ?>
-                                        <a href="ver_documento.php?id=<?php echo $doc['id']; ?>" 
+                                        <a href="ver_documento.php?id=<?php echo $doc['id']; ?>"
                                            class="btn btn-info btn-small"
                                            title="Ver detalles y todas las versiones">
-                                            📄 Detalles
+                                            Detalles
                                         </a>
                                     </div>
                                 </td>
