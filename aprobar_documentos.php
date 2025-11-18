@@ -581,14 +581,7 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
                                 </span>
                             </div>
                         </div>
-                        
-                        <?php if (!empty($doc['descripcion'])): ?>
-                            <div class="document-description">
-                                <strong>Descripción:</strong><br>
-                                <?php echo nl2br(htmlspecialchars($doc['descripcion'])); ?>
-                            </div>
-                        <?php endif; ?>
-                        
+
                         <?php if ($doc['total_versiones'] > 0): ?>
                             <div class="version-info">
                                 📄 Versión actual: <strong>v<?php echo htmlspecialchars($doc['version_actual']); ?></strong>
@@ -652,7 +645,6 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
                         <tr>
                             <th>Código</th>
                             <th>Nombre</th>
-                            <th class="hide-on-small">Responsable</th>
                             <th>Estado</th>
                             <th>Fecha de Decisión</th>
                             <th>Acción</th>
@@ -663,7 +655,6 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
                             <tr>
                                 <td><?php echo htmlspecialchars($doc['codigo']); ?></td>
                                 <td><?php echo htmlspecialchars($doc['nombre']); ?></td>
-                                <td class="hide-on-small"><?php echo htmlspecialchars($doc['responsable_nombre']); ?></td>
                                 <td>
                                     <span class="badge badge-<?php echo strtolower($doc['estado']); ?>">
                                         <?php echo htmlspecialchars($doc['estado']); ?>
