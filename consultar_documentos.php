@@ -327,39 +327,22 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
             font-size: 14px;
         }
         
-        .doc-description {
-            max-width: 300px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-size: 13px;
-            color: #666;
-        }
-        
         .highlight {
             background: #fef5e7;
             padding: 2px 4px;
             border-radius: 3px;
         }
 
+        .action-buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+        }
+
         /* Responsive para pantallas pequeñas (laptop/tablet) */
         @media screen and (max-width: 1200px) {
-            .hide-on-small {
-                display: none !important;
-            }
-
-            .doc-description {
-                display: none !important;
-            }
-
-            .action-buttons {
-                display: flex;
-                flex-direction: row;
-                gap: 5px;
-                flex-wrap: nowrap;
-                white-space: nowrap;
-            }
-
             .btn-small {
                 padding: 5px 8px;
                 font-size: 11px;
@@ -519,7 +502,6 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
                             <th>Nombre</th>
                             <th>Categoría</th>
                             <th>Área</th>
-                            <th class="hide-on-small">Responsable</th>
                             <th>Estado</th>
                             <th>Versión</th>
                             <th>Fecha Mod.</th>
@@ -530,18 +512,9 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
                         <?php foreach ($resultados_temp as $doc): ?>
                             <tr>
                                 <td><strong><?php echo htmlspecialchars($doc['codigo']); ?></strong></td>
-                                <td>
-                                    <?php echo htmlspecialchars($doc['nombre']); ?>
-                                    <?php if (!empty($doc['descripcion'])): ?>
-                                        <br>
-                                        <span class="doc-description" title="<?php echo htmlspecialchars($doc['descripcion']); ?>">
-                                            <?php echo htmlspecialchars($doc['descripcion']); ?>
-                                        </span>
-                                    <?php endif; ?>
-                                </td>
+                                <td><?php echo htmlspecialchars($doc['nombre']); ?></td>
                                 <td><?php echo htmlspecialchars($doc['categoria'] ?? '-'); ?></td>
                                 <td><?php echo htmlspecialchars($doc['area'] ?? '-'); ?></td>
-                                <td class="hide-on-small"><?php echo htmlspecialchars($doc['responsable_nombre']); ?></td>
                                 <td>
                                     <span class="badge badge-<?php echo strtolower($doc['estado']); ?>">
                                         <?php echo htmlspecialchars($doc['estado']); ?>

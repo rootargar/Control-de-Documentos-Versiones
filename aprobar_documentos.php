@@ -450,14 +450,6 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
 
         /* Responsive para pantallas pequeñas (laptop/tablet) */
         @media screen and (max-width: 1200px) {
-            .hide-on-small {
-                display: none !important;
-            }
-
-            .document-description {
-                display: none !important;
-            }
-
             .btn-small {
                 padding: 5px 8px;
                 font-size: 11px;
@@ -569,25 +561,14 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
                                 <span><?php echo htmlspecialchars($doc['area'] ?? 'N/A'); ?></span>
                             </div>
                             <div class="meta-item">
-                                <label>Responsable:</label>
-                                <span><?php echo htmlspecialchars($doc['responsable_nombre']); ?></span>
-                            </div>
-                            <div class="meta-item">
                                 <label>Fecha Creación:</label>
                                 <span>
-                                    <?php 
+                                    <?php
                                     echo $doc['fecha_creacion'] ? date('d/m/Y', strtotime($doc['fecha_creacion'])) : '-';
                                     ?>
                                 </span>
                             </div>
                         </div>
-                        
-                        <?php if (!empty($doc['descripcion'])): ?>
-                            <div class="document-description">
-                                <strong>Descripción:</strong><br>
-                                <?php echo nl2br(htmlspecialchars($doc['descripcion'])); ?>
-                            </div>
-                        <?php endif; ?>
                         
                         <?php if ($doc['total_versiones'] > 0): ?>
                             <div class="version-info">
@@ -652,7 +633,6 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
                         <tr>
                             <th>Código</th>
                             <th>Nombre</th>
-                            <th class="hide-on-small">Responsable</th>
                             <th>Estado</th>
                             <th>Fecha de Decisión</th>
                             <th>Acción</th>
@@ -663,7 +643,6 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
                             <tr>
                                 <td><?php echo htmlspecialchars($doc['codigo']); ?></td>
                                 <td><?php echo htmlspecialchars($doc['nombre']); ?></td>
-                                <td class="hide-on-small"><?php echo htmlspecialchars($doc['responsable_nombre']); ?></td>
                                 <td>
                                     <span class="badge badge-<?php echo strtolower($doc['estado']); ?>">
                                         <?php echo htmlspecialchars($doc['estado']); ?>
