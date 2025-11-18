@@ -447,6 +447,61 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
         table tr:hover {
             background: #f7fafc;
         }
+
+        /* Responsive para pantallas pequeñas (laptop/tablet) */
+        @media screen and (max-width: 1200px) {
+            .hide-on-small {
+                display: none !important;
+            }
+
+            .document-description {
+                display: none !important;
+            }
+
+            .btn-small {
+                padding: 5px 8px;
+                font-size: 11px;
+            }
+        }
+
+        @media screen and (max-width: 992px) {
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .document-meta {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            table th,
+            table td {
+                padding: 8px;
+                font-size: 13px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 15px;
+                overflow-x: auto;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .document-card {
+                padding: 15px;
+            }
+
+            .approval-actions {
+                flex-direction: column;
+            }
+
+            table {
+                min-width: 600px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -597,7 +652,7 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
                         <tr>
                             <th>Código</th>
                             <th>Nombre</th>
-                            <th>Responsable</th>
+                            <th class="hide-on-small">Responsable</th>
                             <th>Estado</th>
                             <th>Fecha de Decisión</th>
                             <th>Acción</th>
@@ -608,19 +663,19 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
                             <tr>
                                 <td><?php echo htmlspecialchars($doc['codigo']); ?></td>
                                 <td><?php echo htmlspecialchars($doc['nombre']); ?></td>
-                                <td><?php echo htmlspecialchars($doc['responsable_nombre']); ?></td>
+                                <td class="hide-on-small"><?php echo htmlspecialchars($doc['responsable_nombre']); ?></td>
                                 <td>
                                     <span class="badge badge-<?php echo strtolower($doc['estado']); ?>">
                                         <?php echo htmlspecialchars($doc['estado']); ?>
                                     </span>
                                 </td>
                                 <td>
-                                    <?php 
+                                    <?php
                                     echo $doc['fecha_modificacion'] ? date('d/m/Y H:i', strtotime($doc['fecha_modificacion'])) : '-';
                                     ?>
                                 </td>
                                 <td>
-                                    <a href="ver_documento.php?id=<?php echo $doc['id']; ?>" 
+                                    <a href="ver_documento.php?id=<?php echo $doc['id']; ?>"
                                        class="btn btn-info btn-small">
                                         Ver
                                     </a>
