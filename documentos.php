@@ -626,7 +626,6 @@ if (isset($_GET['editar'])) {
                     <th>Código</th>
                     <th>Nombre</th>
                     <th>Categoría</th>
-                    <th class="hide-on-small">Responsable</th>
                     <th>Estado</th>
                     <th>Versiones</th>
                     <th>Fecha Mod.</th>
@@ -639,7 +638,6 @@ if (isset($_GET['editar'])) {
                         <td><?php echo htmlspecialchars($doc['codigo']); ?></td>
                         <td><?php echo htmlspecialchars($doc['nombre']); ?></td>
                         <td><?php echo htmlspecialchars($doc['categoria'] ?? '-'); ?></td>
-                        <td class="hide-on-small"><?php echo htmlspecialchars($doc['responsable_nombre']); ?></td>
                         <td>
                             <span class="badge badge-<?php echo strtolower($doc['estado']); ?>">
                                 <?php echo htmlspecialchars($doc['estado']); ?>

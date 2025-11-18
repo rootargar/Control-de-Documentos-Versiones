@@ -519,7 +519,6 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
                             <th>Nombre</th>
                             <th>Categoría</th>
                             <th>Área</th>
-                            <th class="hide-on-small">Responsable</th>
                             <th>Estado</th>
                             <th>Versión</th>
                             <th>Fecha Mod.</th>
@@ -530,18 +529,9 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
                         <?php foreach ($resultados_temp as $doc): ?>
                             <tr>
                                 <td><strong><?php echo htmlspecialchars($doc['codigo']); ?></strong></td>
-                                <td>
-                                    <?php echo htmlspecialchars($doc['nombre']); ?>
-                                    <?php if (!empty($doc['descripcion'])): ?>
-                                        <br>
-                                        <span class="doc-description" title="<?php echo htmlspecialchars($doc['descripcion']); ?>">
-                                            <?php echo htmlspecialchars($doc['descripcion']); ?>
-                                        </span>
-                                    <?php endif; ?>
-                                </td>
+                                <td><?php echo htmlspecialchars($doc['nombre']); ?></td>
                                 <td><?php echo htmlspecialchars($doc['categoria'] ?? '-'); ?></td>
                                 <td><?php echo htmlspecialchars($doc['area'] ?? '-'); ?></td>
-                                <td class="hide-on-small"><?php echo htmlspecialchars($doc['responsable_nombre']); ?></td>
                                 <td>
                                     <span class="badge badge-<?php echo strtolower($doc['estado']); ?>">
                                         <?php echo htmlspecialchars($doc['estado']); ?>

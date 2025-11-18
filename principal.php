@@ -193,7 +193,6 @@ $stmt = sqlsrv_query($conn, $sql);
                             <th>Categoría</th>
                             <th>Fecha de Creación</th>
                             <th>Fecha de Modificación</th>
-                            <th>Responsable</th>
                             <th>Área</th>
                             <th>Estado</th>
                             <th>Acciones</th>
@@ -205,7 +204,7 @@ $stmt = sqlsrv_query($conn, $sql);
                                 <td><?php echo htmlspecialchars($doc['nombre']); ?></td>
                                 <td><?php echo htmlspecialchars($doc['categoria'] ?? '-'); ?></td>
                                 <td>
-                                    <?php 
+                                    <?php
                                     if ($doc['fecha_creacion']) {
                                         echo date('d/m/Y', strtotime($doc['fecha_creacion']));
                                     } else {
@@ -214,7 +213,7 @@ $stmt = sqlsrv_query($conn, $sql);
                                     ?>
                                 </td>
                                 <td>
-                                    <?php 
+                                    <?php
                                     if ($doc['fecha_modificacion']) {
                                         echo date('d/m/Y', strtotime($doc['fecha_modificacion']));
                                     } else {
@@ -222,20 +221,19 @@ $stmt = sqlsrv_query($conn, $sql);
                                     }
                                     ?>
                                 </td>
-                                <td><?php echo htmlspecialchars($doc['responsable_nombre']); ?></td>
                                 <td><?php echo htmlspecialchars($doc['area'] ?? '-'); ?></td>
                                 <td>Aprobado</td>
                                 <td>
                                     <div style="display: flex; gap: 5px;">
                                         <?php if ($doc['version_id']): ?>
-                                            <a href="visualizar_pdf.php?version_id=<?php echo $doc['version_id']; ?>" 
+                                            <a href="visualizar_pdf.php?version_id=<?php echo $doc['version_id']; ?>"
                                                class="btn btn-primary"
                                                target="_blank"
                                                title="Ver PDF en el navegador">
                                                 👁️ Ver PDF
                                             </a>
                                         <?php endif; ?>
-                                        <a href="ver_documento.php?id=<?php echo $doc['id']; ?>" 
+                                        <a href="ver_documento.php?id=<?php echo $doc['id']; ?>"
                                            class="btn btn-primary"
                                            title="Ver detalles y todas las versiones">
                                             📄 Detalles
