@@ -47,13 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                $descripcion, $fecha_elaboracion, empty($fecha_vencimiento) ? null : $fecha_vencimiento);
                 
                 $stmt = sqlsrv_query($conn, $sql, $params);
-                
+
                 if ($stmt) {
                     $mensaje = 'Documento creado exitosamente';
                     $tipo_mensaje = 'success';
                     registrarAuditoria('Crear Documento', "Documento creado: $nombre ($codigo)", 'Documentos', null);
                 } else {
-                    $mensaje = 'Error al crear el documento';
+                    $errors = sqlsrv_errors();
+                    $mensaje = 'Error al crear el documento: ' . ($errors ? $errors[0]['message'] : 'Error desconocido');
                     $tipo_mensaje = 'error';
                 }
             }
@@ -118,7 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         );
                     }
                 } else {
-                    $mensaje = 'Error al actualizar el documento';
+                    $errors = sqlsrv_errors();
+                    $mensaje = 'Error al actualizar el documento: ' . ($errors ? $errors[0]['message'] : 'Error desconocido');
                     $tipo_mensaje = 'error';
                 }
             }
