@@ -23,7 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $departamento = trim($_POST['departamento'] ?? '');
         $responsable_id = $_POST['responsable_id'] ?? '';
         $descripcion = trim($_POST['descripcion'] ?? '');
+        // Convertir fecha a formato datetime de SQL Server
         $fecha_elaboracion = $_POST['fecha_elaboracion'] ?? date('Y-m-d');
+        $fecha_elaboracion = $fecha_elaboracion . ' ' . date('H:i:s');
         $fecha_vencimiento = $_POST['fecha_vencimiento'] ?? null;
         
         if (empty($nombre) || empty($codigo) || empty($responsable_id)) {
@@ -68,7 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $departamento = trim($_POST['departamento'] ?? '');
         $responsable_id = $_POST['responsable_id'] ?? '';
         $descripcion = trim($_POST['descripcion'] ?? '');
+        // Convertir fecha a formato datetime de SQL Server
         $fecha_elaboracion = $_POST['fecha_elaboracion'] ?? date('Y-m-d');
+        $fecha_elaboracion = $fecha_elaboracion . ' ' . date('H:i:s');
         $fecha_vencimiento = $_POST['fecha_vencimiento'] ?? null;
         $estado = $_POST['estado'] ?? 'Pendiente';
         
