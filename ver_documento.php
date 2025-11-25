@@ -308,8 +308,12 @@ registrarAuditoria('Ver Documento', "Documento consultado: " . $documento['nombr
                     <label>Área</label>
                     <p><?php echo htmlspecialchars($documento['area'] ?? '-'); ?></p>
                 </div>
+                <div class="info-item">
+                    <label>Departamento</label>
+                    <p><?php echo htmlspecialchars($documento['departamento'] ?? '-'); ?></p>
+                </div>
             </div>
-            
+
             <div class="info-box">
                 <h3>Responsable</h3>
                 <div class="info-item">

@@ -9,6 +9,7 @@ verificarLogin();
 $buscar = $_GET['buscar'] ?? '';
 $categoria = $_GET['categoria'] ?? '';
 $area = $_GET['area'] ?? '';
+$departamento = $_GET['departamento'] ?? '';
 $estado = $_GET['estado'] ?? 'Aprobado'; // Por defecto solo aprobados
 $responsable_id = $_GET['responsable_id'] ?? '';
 
@@ -33,6 +34,11 @@ if (!empty($area)) {
     $params[] = $area;
 }
 
+if (!empty($departamento)) {
+    $where_conditions[] = "d.departamento = ?";
+    $params[] = $departamento;
+}
+
 if (!empty($estado)) {
     $where_conditions[] = "d.estado = ?";
     $params[] = $estado;
@@ -46,12 +52,13 @@ if (!empty($responsable_id)) {
 $where_clause = implode(" AND ", $where_conditions);
 
 // Obtener documentos
-$sql = "SELECT 
+$sql = "SELECT
     d.id,
     d.nombre,
     d.codigo,
     d.categoria,
     d.area,
+    d.departamento,
     d.responsable_id,
     d.estado,
     d.descripcion,
@@ -446,6 +453,7 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
                             <option value="">Todas las categorías</option>
                             <option value="Proceso" <?php if ($categoria == 'Proceso'): ?>selected<?php endif; ?>>Proceso</option>
                             <option value="Politica" <?php if ($categoria == 'Politica'): ?>selected<?php endif; ?>>Política</option>
+                            <option value="Procedimiento" <?php if ($categoria == 'Procedimiento'): ?>selected<?php endif; ?>>Procedimiento</option>
                         </select>
                     </div>
                     
@@ -459,7 +467,19 @@ while ($resp = sqlsrv_fetch_array($stmtResponsables, SQLSRV_FETCH_ASSOC)) {
                             <option value="Unidades" <?php if ($area == 'Unidades'): ?>selected<?php endif; ?>>Unidades</option>
                         </select>
                     </div>
-                    
+
+                    <div class="form-group">
+                        <label for="departamento">Departamento</label>
+                        <select id="departamento" name="departamento">
+                            <option value="">Todos los departamentos</option>
+                            <option value="Recursos Humanos" <?php if ($departamento == 'Recursos Humanos'): ?>selected<?php endif; ?>>Recursos Humanos</option>
+                            <option value="Finanzas" <?php if ($departamento == 'Finanzas'): ?>selected<?php endif; ?>>Finanzas</option>
+                            <option value="Sistemas" <?php if ($departamento == 'Sistemas'): ?>selected<?php endif; ?>>Sistemas</option>
+                            <option value="Operaciones" <?php if ($departamento == 'Operaciones'): ?>selected<?php endif; ?>>Operaciones</option>
+                            <option value="Comercial" <?php if ($departamento == 'Comercial'): ?>selected<?php endif; ?>>Comercial</option>
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label for="estado">Estado</label>
                         <select id="estado" name="estado">
