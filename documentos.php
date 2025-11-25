@@ -24,10 +24,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $responsable_id = $_POST['responsable_id'] ?? '';
         $descripcion = trim($_POST['descripcion'] ?? '');
         // Convertir fecha a formato datetime de SQL Server
-        $fecha_elaboracion = $_POST['fecha_elaboracion'] ?? date('Y-m-d');
-        $fecha_elaboracion = $fecha_elaboracion . ' ' . date('H:i:s');
-        $fecha_vencimiento = $_POST['fecha_vencimiento'] ?? null;
-        
+        $fecha_elab_input = trim($_POST['fecha_elaboracion'] ?? '');
+        if (empty($fecha_elab_input)) {
+            $fecha_elaboracion = date('Y-m-d H:i:s');
+        } else {
+            $fecha_elaboracion = $fecha_elab_input . ' 00:00:00';
+        }
+        $fecha_vencimiento = trim($_POST['fecha_vencimiento'] ?? '');
+
         if (empty($nombre) || empty($codigo) || empty($responsable_id)) {
             $mensaje = 'Los campos nombre, código y responsable son obligatorios';
             $tipo_mensaje = 'error';
@@ -43,8 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 // Convertir fecha_vencimiento al formato correcto si existe
                 $fecha_venc_formatted = null;
-                if (!empty($fecha_vencimiento)) {
-                    $fecha_venc_formatted = $fecha_vencimiento . ' 00:00:00';
+                if (!empty($fecha_vencimiento) && $fecha_vencimiento !== '') {
+                    // Validar que sea una fecha válida
+                    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_vencimiento)) {
+                        $fecha_venc_formatted = $fecha_vencimiento . ' 00:00:00';
+                    }
                 }
 
                 $sql = "INSERT INTO Documentos (nombre, codigo, categoria, area, departamento, responsable_id,
@@ -81,9 +88,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $responsable_id = $_POST['responsable_id'] ?? '';
         $descripcion = trim($_POST['descripcion'] ?? '');
         // Convertir fecha a formato datetime de SQL Server
-        $fecha_elaboracion = $_POST['fecha_elaboracion'] ?? date('Y-m-d');
-        $fecha_elaboracion = $fecha_elaboracion . ' ' . date('H:i:s');
-        $fecha_vencimiento = $_POST['fecha_vencimiento'] ?? null;
+        $fecha_elab_input = trim($_POST['fecha_elaboracion'] ?? '');
+        if (empty($fecha_elab_input)) {
+            $fecha_elaboracion = date('Y-m-d H:i:s');
+        } else {
+            $fecha_elaboracion = $fecha_elab_input . ' 00:00:00';
+        }
+        $fecha_vencimiento = trim($_POST['fecha_vencimiento'] ?? '');
         $estado = $_POST['estado'] ?? 'Pendiente';
         
         if (empty($id) || empty($nombre) || empty($codigo) || empty($responsable_id)) {
@@ -107,8 +118,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Convertir fecha_vencimiento al formato correcto si existe
                 $fecha_venc_formatted = null;
-                if (!empty($fecha_vencimiento)) {
-                    $fecha_venc_formatted = $fecha_vencimiento . ' 00:00:00';
+                if (!empty($fecha_vencimiento) && $fecha_vencimiento !== '') {
+                    // Validar que sea una fecha válida
+                    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_vencimiento)) {
+                        $fecha_venc_formatted = $fecha_vencimiento . ' 00:00:00';
+                    }
                 }
 
                 $sql = "UPDATE Documentos SET nombre = ?, codigo = ?, categoria = ?, area = ?, departamento = ?,
