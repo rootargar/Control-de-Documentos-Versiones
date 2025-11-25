@@ -80,12 +80,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Obtener documentos pendientes de aprobación
-$sql = "SELECT 
+$sql = "SELECT
     d.id,
     d.nombre,
     d.codigo,
     d.categoria,
     d.area,
+    d.departamento,
     d.descripcion,
     d.estado,
     d.fecha_creacion,
@@ -567,6 +568,10 @@ $stmtRecientes = sqlsrv_query($conn, $sqlRecientes);
                             <div class="meta-item">
                                 <label>Área:</label>
                                 <span><?php echo htmlspecialchars($doc['area'] ?? 'N/A'); ?></span>
+                            </div>
+                            <div class="meta-item">
+                                <label>Departamento:</label>
+                                <span><?php echo htmlspecialchars($doc['departamento'] ?? 'N/A'); ?></span>
                             </div>
                             <div class="meta-item">
                                 <label>Responsable:</label>

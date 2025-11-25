@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $codigo = trim($_POST['codigo'] ?? '');
         $categoria = trim($_POST['categoria'] ?? '');
         $area = trim($_POST['area'] ?? '');
+        $departamento = trim($_POST['departamento'] ?? '');
         $responsable_id = $_POST['responsable_id'] ?? '';
         $descripcion = trim($_POST['descripcion'] ?? '');
         $fecha_vencimiento = $_POST['fecha_vencimiento'] ?? null;
@@ -37,11 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mensaje = 'El código del documento ya existe';
                 $tipo_mensaje = 'error';
             } else {
-                $sql = "INSERT INTO Documentos (nombre, codigo, categoria, area, responsable_id, 
-                        descripcion, fecha_creacion, fecha_vencimiento, estado, activo) 
-                        VALUES (?, ?, ?, ?, ?, ?, GETDATE(), ?, 'Pendiente', 1)";
-                
-                $params = array($nombre, $codigo, $categoria, $area, $responsable_id, 
+                $sql = "INSERT INTO Documentos (nombre, codigo, categoria, area, departamento, responsable_id,
+                        descripcion, fecha_creacion, fecha_vencimiento, estado, activo)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, GETDATE(), ?, 'Pendiente', 1)";
+
+                $params = array($nombre, $codigo, $categoria, $area, $departamento, $responsable_id,
                                $descripcion, empty($fecha_vencimiento) ? null : $fecha_vencimiento);
                 
                 $stmt = sqlsrv_query($conn, $sql, $params);
@@ -62,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $codigo = trim($_POST['codigo'] ?? '');
         $categoria = trim($_POST['categoria'] ?? '');
         $area = trim($_POST['area'] ?? '');
+        $departamento = trim($_POST['departamento'] ?? '');
         $responsable_id = $_POST['responsable_id'] ?? '';
         $descripcion = trim($_POST['descripcion'] ?? '');
         $fecha_vencimiento = $_POST['fecha_vencimiento'] ?? null;
@@ -86,13 +88,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $docAnterior = sqlsrv_fetch_array($stmtEstadoAnterior, SQLSRV_FETCH_ASSOC);
                 $estadoAnterior = $docAnterior['estado'] ?? '';
                 
-                $sql = "UPDATE Documentos SET nombre = ?, codigo = ?, categoria = ?, area = ?, 
-                        responsable_id = ?, descripcion = ?, fecha_modificacion = GETDATE(), 
-                        fecha_vencimiento = ?, estado = ? 
+                $sql = "UPDATE Documentos SET nombre = ?, codigo = ?, categoria = ?, area = ?, departamento = ?,
+                        responsable_id = ?, descripcion = ?, fecha_modificacion = GETDATE(),
+                        fecha_vencimiento = ?, estado = ?
                         WHERE id = ?";
-                
-                $params = array($nombre, $codigo, $categoria, $area, $responsable_id, 
-                               $descripcion, empty($fecha_vencimiento) ? null : $fecha_vencimiento, 
+
+                $params = array($nombre, $codigo, $categoria, $area, $departamento, $responsable_id,
+                               $descripcion, empty($fecha_vencimiento) ? null : $fecha_vencimiento,
                                $estado, $id);
                 
                 $stmt = sqlsrv_query($conn, $sql, $params);
@@ -548,6 +550,7 @@ if (isset($_GET['editar'])) {
                             <option value="">Seleccione una categoría</option>
                             <option value="Proceso" <?php if ($documentoEditar && $documentoEditar['categoria'] == 'Proceso'): ?>selected<?php endif; ?>>Proceso</option>
                             <option value="Politica" <?php if ($documentoEditar && $documentoEditar['categoria'] == 'Politica'): ?>selected<?php endif; ?>>Política</option>
+                            <option value="Procedimiento" <?php if ($documentoEditar && $documentoEditar['categoria'] == 'Procedimiento'): ?>selected<?php endif; ?>>Procedimiento</option>
                         </select>
                     </div>
                     
@@ -561,7 +564,19 @@ if (isset($_GET['editar'])) {
                             <option value="Unidades" <?php if ($documentoEditar && $documentoEditar['area'] == 'Unidades'): ?>selected<?php endif; ?>>Unidades</option>
                         </select>
                     </div>
-                    
+
+                    <div class="form-group">
+                        <label for="departamento">Departamento</label>
+                        <select id="departamento" name="departamento">
+                            <option value="">Seleccione un departamento</option>
+                            <option value="Recursos Humanos" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Recursos Humanos'): ?>selected<?php endif; ?>>Recursos Humanos</option>
+                            <option value="Finanzas" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Finanzas'): ?>selected<?php endif; ?>>Finanzas</option>
+                            <option value="Sistemas" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Sistemas'): ?>selected<?php endif; ?>>Sistemas</option>
+                            <option value="Operaciones" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Operaciones'): ?>selected<?php endif; ?>>Operaciones</option>
+                            <option value="Comercial" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Comercial'): ?>selected<?php endif; ?>>Comercial</option>
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label for="responsable_id">Responsable <span class="required">*</span></label>
                         <select id="responsable_id" name="responsable_id" required>
