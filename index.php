@@ -278,7 +278,7 @@ $stmtDocumentos = sqlsrv_query($conn, $sqlDocumentos);
                 </a>
             <?php endif; ?>
             
-            <?php if (tieneAlgunRol([1, 2])): ?>
+            <?php if (tieneAlgunRol([1, 2, 4])): ?>
                 <a href="documentos.php" class="card">
                     <h3>Gestión de Documentos</h3>
                     <p>Crear, editar y gestionar documentos del sistema</p>
@@ -290,7 +290,7 @@ $stmtDocumentos = sqlsrv_query($conn, $sqlDocumentos);
                 <p>Buscar y visualizar documentos aprobados</p>
             </a>
             
-            <?php if (tieneAlgunRol([1, 4])): ?>
+            <?php if (tieneAlgunRol([1, 2, 4])): ?>
                 <a href="aprobar_documentos.php" class="card">
                     <h3>Aprobar Documentos</h3>
                     <p>Revisar y aprobar documentos pendientes</p>
