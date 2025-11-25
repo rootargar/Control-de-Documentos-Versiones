@@ -41,13 +41,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mensaje = 'El código del documento ya existe';
                 $tipo_mensaje = 'error';
             } else {
+                // Convertir fecha_vencimiento al formato correcto si existe
+                $fecha_venc_formatted = null;
+                if (!empty($fecha_vencimiento)) {
+                    $fecha_venc_formatted = $fecha_vencimiento . ' 00:00:00';
+                }
+
                 $sql = "INSERT INTO Documentos (nombre, codigo, categoria, area, departamento, responsable_id,
                         descripcion, fecha_creacion, fecha_vencimiento, estado, activo)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente', 1)";
 
                 $params = array($nombre, $codigo, $categoria, $area, $departamento, $responsable_id,
-                               $descripcion, $fecha_elaboracion, empty($fecha_vencimiento) ? null : $fecha_vencimiento);
-                
+                               $descripcion, $fecha_elaboracion, $fecha_venc_formatted);
+
+                // Debug temporal
+                error_log("Fecha elaboración: " . $fecha_elaboracion);
+                error_log("Fecha vencimiento: " . ($fecha_venc_formatted ?? 'NULL'));
+
                 $stmt = sqlsrv_query($conn, $sql, $params);
 
                 if ($stmt) {
@@ -94,16 +104,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmtEstadoAnterior = sqlsrv_query($conn, $sqlEstadoAnterior, array($id));
                 $docAnterior = sqlsrv_fetch_array($stmtEstadoAnterior, SQLSRV_FETCH_ASSOC);
                 $estadoAnterior = $docAnterior['estado'] ?? '';
-                
+
+                // Convertir fecha_vencimiento al formato correcto si existe
+                $fecha_venc_formatted = null;
+                if (!empty($fecha_vencimiento)) {
+                    $fecha_venc_formatted = $fecha_vencimiento . ' 00:00:00';
+                }
+
                 $sql = "UPDATE Documentos SET nombre = ?, codigo = ?, categoria = ?, area = ?, departamento = ?,
                         responsable_id = ?, descripcion = ?, fecha_creacion = ?, fecha_modificacion = GETDATE(),
                         fecha_vencimiento = ?, estado = ?
                         WHERE id = ?";
 
                 $params = array($nombre, $codigo, $categoria, $area, $departamento, $responsable_id,
-                               $descripcion, $fecha_elaboracion, empty($fecha_vencimiento) ? null : $fecha_vencimiento,
+                               $descripcion, $fecha_elaboracion, $fecha_venc_formatted,
                                $estado, $id);
-                
+
                 $stmt = sqlsrv_query($conn, $sql, $params);
                 
                 if ($stmt) {
