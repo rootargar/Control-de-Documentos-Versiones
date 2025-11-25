@@ -6,8 +6,8 @@ require_once 'config.php';
 // Verificar que el usuario esté autenticado
 verificarLogin();
 
-// Solo administradores y editores pueden subir documentos
-requiereRol([1, 2], 'No tiene permisos para subir documentos');
+// Administradores, editores y aprobadores pueden subir documentos
+requiereRol([1, 2, 4], 'No tiene permisos para subir documentos');
 
 $mensaje = '';
 $tipo_mensaje = '';

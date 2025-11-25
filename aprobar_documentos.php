@@ -5,8 +5,8 @@ require_once 'conexion.php';
 // Verificar que el usuario esté autenticado
 verificarLogin();
 
-// Solo administradores y aprobadores pueden acceder
-requiereRol([1, 4], 'No tiene permisos para aprobar documentos');
+// Administradores, editores y aprobadores pueden aprobar documentos
+requiereRol([1, 2, 4], 'No tiene permisos para aprobar documentos');
 
 $mensaje = '';
 $tipo_mensaje = '';

@@ -5,8 +5,8 @@ require_once 'conexion.php';
 // Verificar que el usuario esté autenticado
 verificarLogin();
 
-// Solo administradores y editores pueden gestionar documentos
-requiereRol([1, 2], 'No tiene permisos para gestionar documentos');
+// Administradores, editores y aprobadores pueden gestionar documentos
+requiereRol([1, 2, 4], 'No tiene permisos para gestionar documentos');
 
 $mensaje = '';
 $tipo_mensaje = '';
@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $departamento = trim($_POST['departamento'] ?? '');
         $responsable_id = $_POST['responsable_id'] ?? '';
         $descripcion = trim($_POST['descripcion'] ?? '');
+        $fecha_elaboracion = $_POST['fecha_elaboracion'] ?? date('Y-m-d');
         $fecha_vencimiento = $_POST['fecha_vencimiento'] ?? null;
         
         if (empty($nombre) || empty($codigo) || empty($responsable_id)) {
@@ -40,10 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $sql = "INSERT INTO Documentos (nombre, codigo, categoria, area, departamento, responsable_id,
                         descripcion, fecha_creacion, fecha_vencimiento, estado, activo)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, GETDATE(), ?, 'Pendiente', 1)";
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente', 1)";
 
                 $params = array($nombre, $codigo, $categoria, $area, $departamento, $responsable_id,
-                               $descripcion, empty($fecha_vencimiento) ? null : $fecha_vencimiento);
+                               $descripcion, $fecha_elaboracion, empty($fecha_vencimiento) ? null : $fecha_vencimiento);
                 
                 $stmt = sqlsrv_query($conn, $sql, $params);
                 
@@ -66,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $departamento = trim($_POST['departamento'] ?? '');
         $responsable_id = $_POST['responsable_id'] ?? '';
         $descripcion = trim($_POST['descripcion'] ?? '');
+        $fecha_elaboracion = $_POST['fecha_elaboracion'] ?? date('Y-m-d');
         $fecha_vencimiento = $_POST['fecha_vencimiento'] ?? null;
         $estado = $_POST['estado'] ?? 'Pendiente';
         
@@ -89,12 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $estadoAnterior = $docAnterior['estado'] ?? '';
                 
                 $sql = "UPDATE Documentos SET nombre = ?, codigo = ?, categoria = ?, area = ?, departamento = ?,
-                        responsable_id = ?, descripcion = ?, fecha_modificacion = GETDATE(),
+                        responsable_id = ?, descripcion = ?, fecha_creacion = ?, fecha_modificacion = GETDATE(),
                         fecha_vencimiento = ?, estado = ?
                         WHERE id = ?";
 
                 $params = array($nombre, $codigo, $categoria, $area, $departamento, $responsable_id,
-                               $descripcion, empty($fecha_vencimiento) ? null : $fecha_vencimiento,
+                               $descripcion, $fecha_elaboracion, empty($fecha_vencimiento) ? null : $fecha_vencimiento,
                                $estado, $id);
                 
                 $stmt = sqlsrv_query($conn, $sql, $params);
@@ -559,8 +561,8 @@ if (isset($_GET['editar'])) {
                         <select id="area" name="area">
                             <option value="">Seleccione un área</option>
                             <option value="Administracion" <?php if ($documentoEditar && $documentoEditar['area'] == 'Administracion'): ?>selected<?php endif; ?>>Administración</option>
-                            <option value="Taller" <?php if ($documentoEditar && $documentoEditar['area'] == 'Taller'): ?>selected<?php endif; ?>>Taller</option>
                             <option value="Refacciones" <?php if ($documentoEditar && $documentoEditar['area'] == 'Refacciones'): ?>selected<?php endif; ?>>Refacciones</option>
+                            <option value="Servicio" <?php if ($documentoEditar && $documentoEditar['area'] == 'Servicio'): ?>selected<?php endif; ?>>Servicio</option>
                             <option value="Unidades" <?php if ($documentoEditar && $documentoEditar['area'] == 'Unidades'): ?>selected<?php endif; ?>>Unidades</option>
                         </select>
                     </div>
@@ -569,11 +571,16 @@ if (isset($_GET['editar'])) {
                         <label for="departamento">Departamento</label>
                         <select id="departamento" name="departamento">
                             <option value="">Seleccione un departamento</option>
+                            <option value="Crédito y Cobranza" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Crédito y Cobranza'): ?>selected<?php endif; ?>>Crédito y Cobranza</option>
                             <option value="Recursos Humanos" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Recursos Humanos'): ?>selected<?php endif; ?>>Recursos Humanos</option>
-                            <option value="Finanzas" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Finanzas'): ?>selected<?php endif; ?>>Finanzas</option>
+                            <option value="Contabilidad" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Contabilidad'): ?>selected<?php endif; ?>>Contabilidad</option>
+                            <option value="Taller" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Taller'): ?>selected<?php endif; ?>>Taller</option>
+                            <option value="Ventas" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Ventas'): ?>selected<?php endif; ?>>Ventas</option>
+                            <option value="Mercadotecnia" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Mercadotecnia'): ?>selected<?php endif; ?>>Mercadotecnia</option>
+                            <option value="Mejora Continua" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Mejora Continua'): ?>selected<?php endif; ?>>Mejora Continua</option>
+                            <option value="Compras" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Compras'): ?>selected<?php endif; ?>>Compras</option>
+                            <option value="Garantías" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Garantías'): ?>selected<?php endif; ?>>Garantías</option>
                             <option value="Sistemas" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Sistemas'): ?>selected<?php endif; ?>>Sistemas</option>
-                            <option value="Operaciones" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Operaciones'): ?>selected<?php endif; ?>>Operaciones</option>
-                            <option value="Comercial" <?php if ($documentoEditar && $documentoEditar['departamento'] == 'Comercial'): ?>selected<?php endif; ?>>Comercial</option>
                         </select>
                     </div>
 
@@ -582,7 +589,7 @@ if (isset($_GET['editar'])) {
                         <select id="responsable_id" name="responsable_id" required>
                             <option value="">Seleccione un responsable</option>
                             <?php foreach ($usuarios as $user): ?>
-                                <option 
+                                <option
                                     value="<?php echo $user['id']; ?>"
                                     <?php if ($documentoEditar && $user['id'] == $documentoEditar['responsable_id']): ?>selected<?php endif; ?>
                                 >
@@ -591,12 +598,22 @@ if (isset($_GET['editar'])) {
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    
+
+                    <div class="form-group">
+                        <label for="fecha_elaboracion">Fecha de Elaboración</label>
+                        <input
+                            type="date"
+                            id="fecha_elaboracion"
+                            name="fecha_elaboracion"
+                            value="<?php echo $documentoEditar && $documentoEditar['fecha_creacion'] ? date('Y-m-d', strtotime($documentoEditar['fecha_creacion'])) : date('Y-m-d'); ?>"
+                        >
+                    </div>
+
                     <div class="form-group">
                         <label for="fecha_vencimiento">Fecha de Vencimiento</label>
-                        <input 
-                            type="date" 
-                            id="fecha_vencimiento" 
+                        <input
+                            type="date"
+                            id="fecha_vencimiento"
                             name="fecha_vencimiento"
                             value="<?php echo $documentoEditar && $documentoEditar['fecha_vencimiento'] ? date('Y-m-d', strtotime($documentoEditar['fecha_vencimiento'])) : ''; ?>"
                         >
