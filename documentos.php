@@ -16,6 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
     
     if ($accion === 'crear') {
+        // ===== LOGGING DETALLADO - INICIO =====
+        error_log("===== CREAR DOCUMENTO - DEBUG =====");
+        error_log("POST data completo: " . print_r($_POST, true));
+        error_log("fecha_elaboracion RAW: " . var_export($_POST['fecha_elaboracion'] ?? 'NO SET', true));
+        error_log("fecha_vencimiento RAW: " . var_export($_POST['fecha_vencimiento'] ?? 'NO SET', true));
+        // ===== LOGGING DETALLADO - FIN =====
+
         $nombre = trim($_POST['nombre'] ?? '');
         $codigo = trim($_POST['codigo'] ?? '');
         $categoria = trim($_POST['categoria'] ?? '');
@@ -31,6 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $fecha_elaboracion = $fecha_elab_input . ' 00:00:00';
         }
         $fecha_vencimiento = trim($_POST['fecha_vencimiento'] ?? '');
+
+        // ===== LOGGING DESPUÉS DE PROCESAR =====
+        error_log("fecha_elab_input (después de trim): '$fecha_elab_input'");
+        error_log("fecha_elaboracion (procesado): '$fecha_elaboracion'");
+        error_log("fecha_vencimiento (después de trim): '$fecha_vencimiento'");
+        // ===== FIN LOGGING =====
 
         if (empty($nombre) || empty($codigo) || empty($responsable_id)) {
             $mensaje = 'Los campos nombre, código y responsable son obligatorios';
