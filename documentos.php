@@ -16,13 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
     
     if ($accion === 'crear') {
-        // ===== LOGGING DETALLADO - INICIO =====
-        error_log("===== CREAR DOCUMENTO - DEBUG =====");
-        error_log("POST data completo: " . print_r($_POST, true));
-        error_log("fecha_elaboracion RAW: " . var_export($_POST['fecha_elaboracion'] ?? 'NO SET', true));
-        error_log("fecha_vencimiento RAW: " . var_export($_POST['fecha_vencimiento'] ?? 'NO SET', true));
-        // ===== LOGGING DETALLADO - FIN =====
-
         $nombre = trim($_POST['nombre'] ?? '');
         $codigo = trim($_POST['codigo'] ?? '');
         $categoria = trim($_POST['categoria'] ?? '');
@@ -30,20 +23,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $departamento = trim($_POST['departamento'] ?? '');
         $responsable_id = $_POST['responsable_id'] ?? '';
         $descripcion = trim($_POST['descripcion'] ?? '');
-        // Convertir fecha a formato datetime de SQL Server
+
+        // Convertir fecha a objeto DateTime de PHP (SOLUCIÓN al error de conversión)
         $fecha_elab_input = trim($_POST['fecha_elaboracion'] ?? '');
         if (empty($fecha_elab_input)) {
-            $fecha_elaboracion = date('Y-m-d H:i:s');
+            $fecha_elaboracion = new DateTime(); // Fecha actual
         } else {
-            $fecha_elaboracion = $fecha_elab_input . ' 00:00:00';
+            $fecha_elaboracion = new DateTime($fecha_elab_input);
         }
-        $fecha_vencimiento = trim($_POST['fecha_vencimiento'] ?? '');
 
-        // ===== LOGGING DESPUÉS DE PROCESAR =====
-        error_log("fecha_elab_input (después de trim): '$fecha_elab_input'");
-        error_log("fecha_elaboracion (procesado): '$fecha_elaboracion'");
-        error_log("fecha_vencimiento (después de trim): '$fecha_vencimiento'");
-        // ===== FIN LOGGING =====
+        $fecha_vencimiento_input = trim($_POST['fecha_vencimiento'] ?? '');
+        $fecha_vencimiento = null;
+        if (!empty($fecha_vencimiento_input)) {
+            $fecha_vencimiento = $fecha_vencimiento_input; // Mantener como string para tipo date
+        }
 
         if (empty($nombre) || empty($codigo) || empty($responsable_id)) {
             $mensaje = 'Los campos nombre, código y responsable son obligatorios';
@@ -58,25 +51,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mensaje = 'El código del documento ya existe';
                 $tipo_mensaje = 'error';
             } else {
-                // Convertir fecha_vencimiento al formato correcto si existe
-                $fecha_venc_formatted = null;
-                if (!empty($fecha_vencimiento) && $fecha_vencimiento !== '') {
-                    // Validar que sea una fecha válida
-                    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_vencimiento)) {
-                        $fecha_venc_formatted = $fecha_vencimiento . ' 00:00:00';
-                    }
-                }
-
                 $sql = "INSERT INTO Documentos (nombre, codigo, categoria, area, departamento, responsable_id,
                         descripcion, fecha_creacion, fecha_vencimiento, estado, activo)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente', 1)";
 
                 $params = array($nombre, $codigo, $categoria, $area, $departamento, $responsable_id,
-                               $descripcion, $fecha_elaboracion, $fecha_venc_formatted);
-
-                // Debug temporal
-                error_log("Fecha elaboración: " . $fecha_elaboracion);
-                error_log("Fecha vencimiento: " . ($fecha_venc_formatted ?? 'NULL'));
+                               $descripcion, $fecha_elaboracion, $fecha_vencimiento);
 
                 $stmt = sqlsrv_query($conn, $sql, $params);
 
@@ -100,16 +80,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $departamento = trim($_POST['departamento'] ?? '');
         $responsable_id = $_POST['responsable_id'] ?? '';
         $descripcion = trim($_POST['descripcion'] ?? '');
-        // Convertir fecha a formato datetime de SQL Server
+
+        // Convertir fecha a objeto DateTime de PHP (SOLUCIÓN al error de conversión)
         $fecha_elab_input = trim($_POST['fecha_elaboracion'] ?? '');
         if (empty($fecha_elab_input)) {
-            $fecha_elaboracion = date('Y-m-d H:i:s');
+            $fecha_elaboracion = new DateTime(); // Fecha actual
         } else {
-            $fecha_elaboracion = $fecha_elab_input . ' 00:00:00';
+            $fecha_elaboracion = new DateTime($fecha_elab_input);
         }
-        $fecha_vencimiento = trim($_POST['fecha_vencimiento'] ?? '');
+
+        $fecha_vencimiento_input = trim($_POST['fecha_vencimiento'] ?? '');
+        $fecha_vencimiento = null;
+        if (!empty($fecha_vencimiento_input)) {
+            $fecha_vencimiento = $fecha_vencimiento_input; // Mantener como string para tipo date
+        }
+
         $estado = $_POST['estado'] ?? 'Pendiente';
-        
+
         if (empty($id) || empty($nombre) || empty($codigo) || empty($responsable_id)) {
             $mensaje = 'Los campos nombre, código y responsable son obligatorios';
             $tipo_mensaje = 'error';
@@ -129,22 +116,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $docAnterior = sqlsrv_fetch_array($stmtEstadoAnterior, SQLSRV_FETCH_ASSOC);
                 $estadoAnterior = $docAnterior['estado'] ?? '';
 
-                // Convertir fecha_vencimiento al formato correcto si existe
-                $fecha_venc_formatted = null;
-                if (!empty($fecha_vencimiento) && $fecha_vencimiento !== '') {
-                    // Validar que sea una fecha válida
-                    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_vencimiento)) {
-                        $fecha_venc_formatted = $fecha_vencimiento . ' 00:00:00';
-                    }
-                }
-
                 $sql = "UPDATE Documentos SET nombre = ?, codigo = ?, categoria = ?, area = ?, departamento = ?,
                         responsable_id = ?, descripcion = ?, fecha_creacion = ?, fecha_modificacion = GETDATE(),
                         fecha_vencimiento = ?, estado = ?
                         WHERE id = ?";
 
                 $params = array($nombre, $codigo, $categoria, $area, $departamento, $responsable_id,
-                               $descripcion, $fecha_elaboracion, $fecha_venc_formatted,
+                               $descripcion, $fecha_elaboracion, $fecha_vencimiento,
                                $estado, $id);
 
                 $stmt = sqlsrv_query($conn, $sql, $params);
