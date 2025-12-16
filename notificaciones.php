@@ -6,6 +6,11 @@
 
 require_once 'conexion.php';
 
+// Cargar sistema de emails si está disponible
+if (file_exists(__DIR__ . '/email_notificaciones.php')) {
+    require_once 'email_notificaciones.php';
+}
+
 /**
  * Crea una nueva notificación en el sistema
  *
@@ -13,9 +18,10 @@ require_once 'conexion.php';
  * @param string $tipo_evento Tipo de evento (Creacion, Cambio Estado, Nueva Version, etc.)
  * @param string $mensaje Mensaje de la notificación
  * @param int|array $usuarios_destino ID de usuario(s) que recibirá(n) la notificación
+ * @param bool $enviar_email Si true, también envía notificación por email
  * @return bool True si se creó correctamente, False en caso contrario
  */
-function crearNotificacion($documento_id, $tipo_evento, $mensaje, $usuarios_destino) {
+function crearNotificacion($documento_id, $tipo_evento, $mensaje, $usuarios_destino, $enviar_email = true) {
     global $conn;
 
     // Si $usuarios_destino es un solo ID, convertirlo a array
@@ -25,7 +31,24 @@ function crearNotificacion($documento_id, $tipo_evento, $mensaje, $usuarios_dest
 
     $exito = true;
 
+    // Obtener datos del documento para el email
+    $datos_documento = array();
+    if ($enviar_email && $documento_id) {
+        $sql_doc = "SELECT d.*, u.nombre as responsable
+                    FROM Documentos d
+                    LEFT JOIN Usuarios u ON d.responsable_id = u.id
+                    WHERE d.id = ?";
+        $stmt_doc = sqlsrv_query($conn, $sql_doc, array($documento_id));
+        if ($stmt_doc) {
+            $datos_documento = sqlsrv_fetch_array($stmt_doc, SQLSRV_FETCH_ASSOC);
+            if ($datos_documento) {
+                $datos_documento['id'] = $documento_id;
+            }
+        }
+    }
+
     foreach ($usuarios_destino as $usuario_id) {
+        // Insertar notificación en base de datos
         $sql = "INSERT INTO Notificaciones
                 (documento_id, usuario_id, tipo_evento, fecha_programada, leida, mensaje)
                 VALUES (?, ?, ?, GETDATE(), 0, ?)";
@@ -36,6 +59,12 @@ function crearNotificacion($documento_id, $tipo_evento, $mensaje, $usuarios_dest
         if (!$stmt) {
             error_log("Error al crear notificación: " . print_r(sqlsrv_errors(), true));
             $exito = false;
+            continue;
+        }
+
+        // Enviar email si está habilitado y la función existe
+        if ($enviar_email && function_exists('enviarNotificacionEmail') && EMAIL_SEND_IMMEDIATE) {
+            enviarNotificacionEmail($usuario_id, $tipo_evento, $mensaje, $datos_documento);
         }
     }
 

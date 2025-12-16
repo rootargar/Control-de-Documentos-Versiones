@@ -4,6 +4,10 @@
 
 El sistema de notificaciones permite a los usuarios recibir alertas sobre eventos importantes relacionados con los documentos del sistema, como creaciones, aprobaciones, rechazos, nuevas versiones y más.
 
+Las notificaciones se envían mediante **dos canales**:
+1. **Notificaciones Web** - Panel en el sistema con actualizaciones en tiempo real
+2. **Notificaciones por Email** - Correos electrónicos con plantillas HTML profesionales
+
 ## Características Principales
 
 ### 1. **Notificaciones en Tiempo Real**
@@ -72,6 +76,23 @@ El sistema notifica sobre los siguientes eventos:
 
 4. **`ver_notificaciones.php`** - Página completa de gestión
 
+5. **`config_email.php`** - Configuración de servidor SMTP y emails
+   - Credenciales SMTP (servidor, puerto, usuario, contraseña)
+   - Configuración de remitente
+   - Plantillas de asunto por tipo de evento
+   - Opciones de envío
+
+6. **`email_notificaciones.php`** - Funciones de envío de emails
+   ```php
+   - enviarEmail($destinatario_email, $nombre, $asunto, $cuerpo_html, $cuerpo_texto)
+   - enviarNotificacionEmail($usuario_id, $tipo_evento, $mensaje, $datos_documento)
+   - generarEmailHTML($tipo_evento, $mensaje, $datos_documento, $nombre_usuario)
+   - generarEmailTexto($tipo_evento, $mensaje, $datos_documento, $nombre_usuario)
+   - probarConfiguracionEmail($email_destino)
+   ```
+
+7. **`probar_email.php`** - Página de prueba de configuración de email (solo administradores)
+
 #### Base de Datos
 
 **Tabla: Notificaciones**
@@ -90,16 +111,135 @@ El sistema notifica sobre los siguientes eventos:
 - `IX_Notificaciones_Usuario` en (usuario_id, leida, fecha_programada DESC)
 - `IX_Notificaciones_Documento` en (documento_id, fecha_programada DESC)
 
-### Migración de Base de Datos
-
-Para actualizar la base de datos, ejecutar:
-
-```bash
-# Desde SQL Server Management Studio o línea de comandos:
-sqlcmd -S servidor -d CPP -i sql/actualizar_notificaciones.sql
+**Tabla: Usuarios** (campos adicionales)
+```sql
+- recibir_emails (BIT) - 1: recibe emails, 0: no recibe emails (por defecto: 1)
 ```
 
-O ejecutar manualmente el script `sql/actualizar_notificaciones.sql`
+### Migración de Base de Datos
+
+Para actualizar la base de datos, ejecutar **ambos scripts** en orden:
+
+```bash
+# 1. Actualizar tabla de notificaciones
+sqlcmd -S servidor -d CPP -i sql/actualizar_notificaciones.sql
+
+# 2. Agregar campo recibir_emails a usuarios
+sqlcmd -S servidor -d CPP -i sql/agregar_campo_recibir_emails.sql
+```
+
+O ejecutar manualmente los scripts desde SQL Server Management Studio.
+
+## Configuración de Notificaciones por Email
+
+### Paso 1: Instalar Dependencias
+
+El sistema utiliza **PHPMailer** para enviar emails. Ya está instalado si ejecutaste:
+
+```bash
+composer require phpmailer/phpmailer
+```
+
+### Paso 2: Configurar Servidor SMTP
+
+Editar el archivo `config_email.php` con las credenciales de tu servidor de correo:
+
+```php
+// Configuración básica
+define('EMAIL_ENABLED', true);                           // Activar emails
+define('EMAIL_SEND_IMMEDIATE', true);                    // Enviar inmediatamente
+
+// Servidor SMTP
+define('SMTP_HOST', 'smtp.gmail.com');                   // Tu servidor SMTP
+define('SMTP_PORT', 587);                                // Puerto (587 para TLS)
+define('SMTP_SECURE', 'tls');                            // Seguridad: 'tls' o 'ssl'
+define('SMTP_USERNAME', 'tu_email@gmail.com');           // Tu email
+define('SMTP_PASSWORD', 'tu_contraseña_app');            // Contraseña o App Password
+
+// Remitente
+define('EMAIL_FROM_ADDRESS', 'noreply@tusistema.com');
+define('EMAIL_FROM_NAME', 'Sistema Gestión Documental');
+
+// URL del sistema (para enlaces en emails)
+define('SYSTEM_BASE_URL', 'http://tusistema.com');
+```
+
+### Paso 3: Configuración por Proveedor de Email
+
+#### Gmail
+
+1. Habilitar "Verificación en 2 pasos" en tu cuenta de Google
+2. Generar una "Contraseña de aplicación" en: https://myaccount.google.com/apppasswords
+3. Usar la contraseña generada en `SMTP_PASSWORD`
+
+```php
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_PORT', 587);
+define('SMTP_SECURE', 'tls');
+define('SMTP_USERNAME', 'tu_email@gmail.com');
+define('SMTP_PASSWORD', 'xxxx xxxx xxxx xxxx'); // App Password
+```
+
+#### Outlook / Office 365
+
+```php
+define('SMTP_HOST', 'smtp.office365.com');
+define('SMTP_PORT', 587);
+define('SMTP_SECURE', 'tls');
+define('SMTP_USERNAME', 'tu_email@outlook.com');
+define('SMTP_PASSWORD', 'tu_contraseña');
+```
+
+#### Servidor SMTP Propio / cPanel
+
+```php
+define('SMTP_HOST', 'mail.tudominio.com');
+define('SMTP_PORT', 587);
+define('SMTP_SECURE', 'tls');
+define('SMTP_USERNAME', 'usuario@tudominio.com');
+define('SMTP_PASSWORD', 'tu_contraseña');
+```
+
+### Paso 4: Probar Configuración
+
+1. Acceder como administrador a `probar_email.php`
+2. Ingresar un email de prueba
+3. Hacer click en "Enviar Email de Prueba"
+4. Verificar que llegue el email
+
+### Características de los Emails
+
+- **Diseño profesional** con HTML responsivo
+- **Plantillas personalizadas** según el tipo de evento
+- **Colores e iconos** distintivos por evento
+- **Información del documento** (nombre, código, estado, responsable)
+- **Botón de acción** para ver el documento
+- **Versión texto plano** para clientes que no soportan HTML
+- **Enlaces directos** al sistema
+
+### Control de Envío
+
+Los usuarios pueden controlar si desean recibir emails:
+
+1. **Campo `recibir_emails` en tabla Usuarios**
+   - `1` = Recibe emails (por defecto)
+   - `0` = No recibe emails
+
+2. **Verificación automática**
+   - Si el usuario no tiene email configurado, no se envía
+   - Si `recibir_emails = 0`, no se envía
+   - Si `EMAIL_ENABLED = false`, no se envía
+
+### Deshabilitar Envío de Emails
+
+Para deshabilitar temporalmente el envío de emails:
+
+```php
+// En config_email.php
+define('EMAIL_ENABLED', false);
+```
+
+Esto mantiene las notificaciones web activas pero deshabilita los emails.
 
 ## Integración en Páginas
 
