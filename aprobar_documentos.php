@@ -1,6 +1,7 @@
 <?php
 require_once 'verificar_login.php';
 require_once 'conexion.php';
+require_once 'notificaciones.php';
 
 // Verificar que el usuario esté autenticado
 verificarLogin();
@@ -61,15 +62,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 // Crear notificación para el responsable
                 if ($estado_anterior != $nuevo_estado) {
-                    $mensaje_notif = "El documento ha sido $nuevo_estado";
+                    $mensaje_notif = "El documento '$nombre_doc' ($codigo_doc) ha sido $nuevo_estado";
                     if (!empty($comentario)) {
-                        $mensaje_notif .= " - $comentario";
+                        $mensaje_notif .= " - Comentario: $comentario";
                     }
-                    
-                    $sqlNotif = "INSERT INTO Notificaciones 
-                                (documento_id, tipo_evento, fecha_programada, enviado, mensaje)
-                                VALUES (?, 'Cambio Estado', GETDATE(), 0, ?)";
-                    sqlsrv_query($conn, $sqlNotif, array($documento_id, $mensaje_notif));
+
+                    notificarEventoDocumento($documento_id, 'Cambio Estado', $mensaje_notif, $_SESSION['usuario_id']);
                 }
             } else {
                 $mensaje = 'Error al actualizar el documento';
