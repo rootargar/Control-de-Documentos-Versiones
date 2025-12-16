@@ -1,6 +1,7 @@
 <?php
 require_once 'verificar_login.php';
 require_once 'conexion.php';
+require_once 'notificaciones.php';
 
 // Verificar que el usuario esté autenticado
 verificarLogin();
@@ -68,9 +69,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = sqlsrv_query($conn, $sql, $params);
 
                 if ($stmt) {
+                    // Obtener el ID del documento recién creado
+                    $sqlId = "SELECT SCOPE_IDENTITY() as id";
+                    $stmtId = sqlsrv_query($conn, $sqlId);
+                    $rowId = sqlsrv_fetch_array($stmtId, SQLSRV_FETCH_ASSOC);
+                    $documento_id = $rowId['id'];
+
                     $mensaje = 'Documento creado exitosamente';
                     $tipo_mensaje = 'success';
-                    registrarAuditoria('Crear Documento', "Documento creado: $nombre ($codigo)", 'Documentos', null);
+                    registrarAuditoria('Crear Documento', "Documento creado: $nombre ($codigo)", 'Documentos', $documento_id);
+
+                    // Crear notificación
+                    $mensaje_notif = "Se ha creado el documento '$nombre' ($codigo) y está pendiente de aprobación";
+                    notificarEventoDocumento($documento_id, 'Creacion', $mensaje_notif, $_SESSION['usuario_id']);
                 } else {
                     $errors = sqlsrv_errors();
                     $mensaje = 'Error al crear el documento: ' . ($errors ? $errors[0]['message'] : 'Error desconocido');
@@ -146,11 +157,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Registrar cambio de estado si hubo cambio
                     if ($estadoAnterior != $estado) {
                         registrarAuditoria(
-                            'Cambio de Estado', 
-                            "Documento '$nombre' cambió de estado: $estadoAnterior → $estado", 
-                            'Documentos', 
+                            'Cambio de Estado',
+                            "Documento '$nombre' cambió de estado: $estadoAnterior → $estado",
+                            'Documentos',
                             $id
                         );
+
+                        // Crear notificación de cambio de estado
+                        $mensaje_notif = "El documento '$nombre' ($codigo) cambió de estado: $estadoAnterior → $estado";
+                        notificarEventoDocumento($id, 'Cambio Estado', $mensaje_notif, $_SESSION['usuario_id']);
                     }
                 } else {
                     $errors = sqlsrv_errors();

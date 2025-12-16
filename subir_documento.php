@@ -2,6 +2,7 @@
 require_once 'verificar_login.php';
 require_once 'conexion.php';
 require_once 'config.php';
+require_once 'notificaciones.php';
 
 // Verificar que el usuario esté autenticado
 verificarLogin();
@@ -112,16 +113,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
                 $tipo_mensaje = 'success';
                 
                 registrarAuditoria(
-                    'Subir Versión', 
-                    "Nueva versión $nuevaVersion del documento: " . $documento['nombre'], 
-                    'VersionesDocumento', 
+                    'Subir Versión',
+                    "Nueva versión $nuevaVersion del documento: " . $documento['nombre'],
+                    'VersionesDocumento',
                     $version_id
                 );
-                
+
                 // Crear notificación de nueva versión
-                $sqlNotif = "INSERT INTO Notificaciones (documento_id, tipo_evento, fecha_programada, enviado, mensaje)
-                            VALUES (?, 'Nueva Version', GETDATE(), 0, 'Se ha subido la versión $nuevaVersion')";
-                sqlsrv_query($conn, $sqlNotif, array($documento_id));
+                $mensaje_notif = "Se ha subido la versión $nuevaVersion del documento '" . $documento['nombre'] . "' (" . $documento['codigo'] . ")";
+                notificarEventoDocumento($documento_id, 'Nueva Version', $mensaje_notif, $_SESSION['usuario_id']);
             } else {
                 // Si falla la inserción, eliminar el archivo
                 unlink($rutaDestino);

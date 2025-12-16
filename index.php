@@ -54,6 +54,12 @@ $stmtDocumentos = sqlsrv_query($conn, $sqlDocumentos);
             font-size: 24px;
         }
         
+        .navbar .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .navbar .user-info {
             text-align: right;
         }
@@ -241,9 +247,12 @@ $stmtDocumentos = sqlsrv_query($conn, $sqlDocumentos);
 <body>
     <div class="navbar">
         <h1>Sistema de Gestión Documental</h1>
-        <div class="user-info">
-            <strong><?php echo htmlspecialchars(obtenerNombreUsuario()); ?></strong><br>
-            <span><?php echo htmlspecialchars(obtenerNombreRol()); ?></span>
+        <div class="nav-actions">
+            <?php include 'componente_notificaciones.php'; ?>
+            <div class="user-info">
+                <strong><?php echo htmlspecialchars(obtenerNombreUsuario()); ?></strong><br>
+                <span><?php echo htmlspecialchars(obtenerNombreRol()); ?></span>
+            </div>
         </div>
     </div>
     
